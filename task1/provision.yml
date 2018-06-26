@@ -1,0 +1,76 @@
+- name: ansible task
+  hosts: all
+  gather_facts: no
+
+  vars: 
+    user_name: user
+    user_id: 1013
+    user_primary_group: user
+    user_primary_group_id: 1013
+    user_password: user123
+    user_authorized_key: 
+    user_home_dir: "/home/{{ user_name }}"
+
+  tasks:
+  - name: checkOS
+    raw: grep ubuntu /etc/os-release
+    register: result
+    failed_when: false
+    changed_when: false
+
+  - name: install Python on Ubuntu
+    block:  
+      - name: install python for ubuntu
+        raw: apt-get update && apt-get install software-properties-common -y
+        args:
+          executable: /bin/bash
+
+      - name: install python for ubuntu
+        raw: add-apt-repository ppa:deadsnakes/ppa
+        args:
+          executable: /bin/bash
+
+      - name: install python for ubuntu
+        raw: apt-get update -y
+        args:
+          executable: /bin/bash
+
+      - name: install python for ubuntu
+        raw: apt-get install python -y
+        args:
+          executable: /bin/bash
+    when: result.stdout != ""
+
+  - name: gather facts
+    setup:
+
+
+  - name: group
+    group:
+      name: "{{ user_primary_group }}"
+      gid: "{{ user_primary_group_id }}"
+
+  - name: user
+    user:
+      name: "{{ user_name }}"
+      uid: "{{ user_id }}"
+      group: "{{ user_primary_group }}"
+      home: "{{ user_home_dir }}"
+      password: "{{ user_password|password_hash('sha512') }}"
+    changed_when: false
+
+  - name: edit sudoers
+    copy:
+      src: sudoers
+      dest: /etc/sudoers
+
+  - name: create sudoers.d folder
+    file:
+      state: directory
+      path: /etc/sudoers.d
+      mode: 0440
+
+  - name: add username to sudoers
+    template:
+      src: user.j2
+      dest: "/etc/sudoers.d/{{ user_name }}"
