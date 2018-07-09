@@ -8,7 +8,7 @@
     user_primary_group: user
     user_primary_group_id: 1013
     user_password: user123
-    user_authorized_key: 
+    user_authorized_key: ""
     user_home_dir: "/home/{{ user_name }}"
 
   tasks:
@@ -58,6 +58,21 @@
       home: "{{ user_home_dir }}"
       password: "{{ user_password|password_hash('sha512') }}"
     changed_when: false
+
+  - name: add .ssh folder
+    file:
+      path: "/home/{{ user_name }}/.ssh"
+      state: directory
+      mode: 0755
+      owner: "{{ user_name }}"
+
+  - name: add user_authorized_key
+    lineinfile:
+      create: yes
+      path: "/home/{{ user_name }}/.ssh/authorized_keys"
+      line: "{{ user_authorized_key }}"
+      mode: 0600
+      owner: "{{ user_name }}"
 
   - name: edit sudoers
     copy:
