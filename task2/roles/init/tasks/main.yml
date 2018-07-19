@@ -1,0 +1,19 @@
+- raw: grep '^ID=' /etc/os-release
+  register: os_type
+  ignore_errors: yes
+  changed_when: false
+
+- block:
+  - name: Update APT Cache
+    raw: apt-get update 
+
+  - name: install python
+    raw: apt-get install -y python-pip
+    args:
+      creates: /usr/bin/python
+  when: '"ubuntu" in os_type.stdout'
+
+- package: name=sudo
+
+- name: gather facts
+  setup:

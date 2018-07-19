@@ -1,0 +1,7 @@
+- name: ansible task
+  hosts: all
+  gather_facts: no
+
+  roles:
+  - init
+  - user

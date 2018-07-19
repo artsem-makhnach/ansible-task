@@ -1,0 +1,23 @@
+- name: group & user & add .ssh folder & add user_authorized_key
+  block:
+    - group:
+        name: "{{ (user_primary_group == None) | ternary(user_name, user_primary_group) }}"
+        gid: "{{ (user_primary_group_id == None) | ternary(omit, user_primary_group_id) }}"
+    - user:
+        name: "{{ user_name | mandatory }}"
+        uid: "{{ (user_id == None) | ternary(((user_primary_group_id == None) | ternary(omit, user_primary_group_id)), user_id) }}"
+        group: "{{ (user_primary_group == None) | ternary(user_name, user_primary_group) }}"
+    - name: add username to sudoers
+      template:
+        src: user.j2
+        dest: "/etc/sudoers.d/{{ user_name }}"
+        validate: '/usr/sbin/visudo -cf %s'
+        backup: yes
+  when: user_name != "root"
+
+- name: add authz key
+  authorized_key:
+    user: "{{ user_name | mandatory}}"
+    key: "{{ lookup('file', '{{ user_authorized_key }}') }}"
+  when: user_authorized_key != None
+

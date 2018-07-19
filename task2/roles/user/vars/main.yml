@@ -1,0 +1,7 @@
+user_name: user2
+user_id:
+user_primary_group: user
+user_primary_group_id:
+#user_password: user
+user_authorized_key: "~/.ssh/id_rsa.pub"
+#user_home_dir: "/home/{{ user_name }}"
