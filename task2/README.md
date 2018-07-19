@@ -1,10 +1,6 @@
 # Ansible playbook to add new user and/or authz_keys
 
-# Requirements
-#### Describe for windows 10 with Ubuntu Linux subsystem.
 
-- Install Ansible 2.4+:
-http://docs.ansible.com/ansible/latest/intro_installation.html#latest-releases-via-apt-ubuntu
 
 # Roles:
 
