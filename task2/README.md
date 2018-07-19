@@ -1,6 +1,15 @@
 # Ansible playbook to add new user and/or authz_keys
 
+**./provision.yml**
+```sh
+- name: ansible task
+  hosts: all
+  gather_facts: no
 
+  roles:
+  - init
+  - user
+```
 
 # Roles:
 
