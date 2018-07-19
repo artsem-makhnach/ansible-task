@@ -61,4 +61,20 @@ http://docs.ansible.com/ansible/latest/intro_installation.html#latest-releases-v
   when: user_authorized_key != None
 
 ```
+**./roles/user/defaults/main.yml**
 
+```sh
+user_name: user
+user_id:
+user_primary_group:
+user_primary_group_id:
+user_authorized_key: "~/.ssh/id_rsa.pub"
+```
+**./roles/user/vars/main.yml**
+```sh
+user_name: user2
+user_id: 10000
+user_primary_group: user
+user_primary_group_id: 10000
+user_authorized_key: "~/.ssh/id_rsa.pub"
+```
